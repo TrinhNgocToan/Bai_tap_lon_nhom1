@@ -2,8 +2,7 @@ import csv
 from datetime import datetime
 
 def menu_xu_ly_diem_hoc_sinh():
-    danh_sach_hoc_sinh = []  # Tạo danh sách học sinh để sử dụng trong các chức năng
-
+    danh_sach_hoc_sinh = []  
     def nhap_danh_sach_hoc_sinh():
         danh_sach = []
         so_luong = int(input("Nhập số lượng học sinh: "))

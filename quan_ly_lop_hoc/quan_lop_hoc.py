@@ -117,28 +117,27 @@ def tim_kiem_lop_hoc():
 
 import csv
 
-def doc_va_luu_danh_sach():
-    global danh_sach_lop_hoc
+def doc_va_luu_danh_sach(danh_sach_lop_hoc):
     while True:
         print("\n--- Quản lý danh sách lớp học ---")
         print("1. Đọc danh sách từ file")
         print("2. Lưu danh sách vào file")
         print("3. Thoát")
-        
+
         try:
             lua_chon = int(input("Chọn chức năng (1-3): "))
             if lua_chon == 1:
                 try:
-                    with open(file="file_csv\ds_lop_hoc.csv", mode="r") as open_file:
+                    with open(file="file_csv/ds_lop_hoc.csv", mode="r") as open_file:
                         csv_reader = csv.reader(open_file)
                         danh_sach_lop_hoc = {row[0]: {'Tên lớp': row[1], 'Số bàn': int(row[2])} for row in csv_reader}
                         print("Đã đọc danh sách từ file:")
-                        xem_lop_hoc()
+                        xem_lop_hoc(danh_sach_lop_hoc)
                 except FileNotFoundError:
                     print("Không tìm thấy file để đọc danh sách.")
             elif lua_chon == 2:
                 try:
-                    with open(file ="file_csv\ds_lop_hoc.csv", mode="w", newline='') as open_file:
+                    with open(file="file_csv/ds_lop_hoc.csv", mode="w", newline='') as open_file:
                         csv_writer = csv.writer(open_file)
                         for ma_lop, thong_tin in danh_sach_lop_hoc.items():
                             csv_writer.writerow([ma_lop, thong_tin['Tên lớp'], thong_tin['Số bàn']])
@@ -152,4 +151,6 @@ def doc_va_luu_danh_sach():
                 print("Lựa chọn không hợp lệ. Vui lòng thử lại.")
         except ValueError:
             print("Vui lòng nhập số nguyên từ 1 đến 3.")
+
+    return danh_sach_lop_hoc
 
