@@ -17,7 +17,6 @@ def quan_ly_thong_tin_hoc_sinh():
 
     from datetime import datetime
 
-    # Giả sử danh_sach_hoc_sinh là danh sách học sinh đã được khai báo
     danh_sach_hoc_sinh = []
 
     def them_hoc_sinh():
@@ -61,7 +60,6 @@ def quan_ly_thong_tin_hoc_sinh():
                 print("Mã lớp không được vượt quá 10 ký tự.")
                 return
             
-            # Tạo đối tượng học sinh
             hoc_sinh = {
                 "ma_hoc_sinh": ma_hoc_sinh,
                 "ho_dem": ho_dem,
@@ -72,7 +70,6 @@ def quan_ly_thong_tin_hoc_sinh():
                 "ma_lop": ma_lop
             }
 
-            # Thêm học sinh vào danh sách
             danh_sach_hoc_sinh.append(hoc_sinh)
             print("Học sinh đã được thêm thành công.")
         
