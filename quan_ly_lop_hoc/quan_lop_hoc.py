@@ -43,26 +43,79 @@ def xem_lop_hoc():
             print(f"{so_thu_tu}. Mã lớp: {ma_lop}, Tên lớp: {thong_tin['Tên lớp']}, Số bàn: {thong_tin['Số bàn']}")
             so_thu_tu += 1
 
+import csv
+
 def them_lop_hoc():
+    file_path = 'file_csv\ds_lop_hoc.csv'  # Đường dẫn tới file ds_lop_hoc.csv
     ma_lop = input("Nhập mã lớp: ")
-    if ma_lop in danh_sach_lop_hoc:
-        print("Mã lớp đã tồn tại. Vui lòng nhập lại.")
-        return
+
+    # Kiểm tra mã lớp đã tồn tại trong file
+    try:
+        with open(file_path, mode='r', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                if row['Mã lớp'] == ma_lop:
+                    print("Mã lớp đã tồn tại. Vui lòng nhập lại.")
+                    return
+    except FileNotFoundError:
+        # File chưa tồn tại, sẽ được tạo khi ghi dữ liệu
+        pass
+
     ten_lop = input("Nhập tên lớp: ")
     try:
         so_ban = int(input("Nhập số bàn: "))
-        danh_sach_lop_hoc[ma_lop] = {'Tên lớp': ten_lop, 'Số bàn': so_ban}
-        print(f"Lớp học {ten_lop} đã được thêm!")
+        new_row = {'Mã lớp': ma_lop, 'Tên lớp': ten_lop, 'Số bàn': so_ban}
+
+        # Ghi dữ liệu vào file (thêm tiêu đề nếu file rỗng hoặc chưa tồn tại)
+        file_exists = False
+        try:
+            with open(file_path, mode='r', encoding='utf-8') as file:
+                file_exists = bool(file.read().strip())
+        except FileNotFoundError:
+            pass
+
+        with open(file_path, mode='a', encoding='utf-8', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=['Mã lớp', 'Tên lớp', 'Số bàn'])
+            if not file_exists:
+                writer.writeheader()  # Ghi tiêu đề nếu file chưa có nội dung
+            writer.writerow(new_row)  # Ghi dòng dữ liệu mới
+
+        print(f"Lớp học {ten_lop} đã được thêm vào file {file_path}!")
     except ValueError:
         print("Số bàn phải là một số nguyên. Vui lòng thử lại.")
 
+import csv
+
 def xoa_lop_hoc():
+    file_path = 'file_csv\ds_lop_hoc.csv'  # Đường dẫn tới file ds_lop_hoc.csv
     ma_lop = input("Nhập mã lớp cần xóa: ")
-    if ma_lop in danh_sach_lop_hoc:
-        del danh_sach_lop_hoc[ma_lop]
+    danh_sach_lop_hoc = []
+    lop_ton_tai = False
+
+    # Đọc dữ liệu từ file
+    try:
+        with open(file_path, mode='r', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                if row['Mã lớp'] == ma_lop:
+                    lop_ton_tai = True  # Đánh dấu lớp cần xóa
+                else:
+                    danh_sach_lop_hoc.append(row)  # Giữ lại các lớp khác
+    except FileNotFoundError:
+        print("File không tồn tại. Không thể xóa lớp học.")
+        return
+
+    # Nếu lớp học tồn tại, ghi lại danh sách mới vào file
+    if lop_ton_tai:
+        with open(file_path, mode='w', encoding='utf-8', newline='') as file:
+            fieldnames = ['Mã lớp', 'Tên lớp', 'Số bàn']
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()  # Ghi tiêu đề
+            writer.writerows(danh_sach_lop_hoc)  # Ghi các lớp còn lại
         print(f"Lớp học với mã {ma_lop} đã được xóa!")
     else:
         print(f"Lớp học với mã {ma_lop} không tồn tại!")
+
 
 def chinh_sua_lop_hoc():
     try:
