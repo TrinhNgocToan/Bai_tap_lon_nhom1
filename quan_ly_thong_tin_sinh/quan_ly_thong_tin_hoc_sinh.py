@@ -15,18 +15,53 @@ def quan_ly_thong_tin_hoc_sinh():
                       f"Ngày sinh: {hs['ngay_sinh']}, SĐT: {hs['so_dien_thoai']}, "
                       f"Mã lớp: {hs['ma_lop']}")
 
+    from datetime import datetime
+
+    # Giả sử danh_sach_hoc_sinh là danh sách học sinh đã được khai báo
+    danh_sach_hoc_sinh = []
+
     def them_hoc_sinh():
         print("\n--- Thêm học sinh ---")
+        
         try:
             ma_hoc_sinh = input("Nhập mã học sinh (tối đa 10 ký tự): ").strip()
+            if len(ma_hoc_sinh) > 10:
+                print("Mã học sinh không được vượt quá 10 ký tự.")
+                return
+            
             ho_dem = input("Nhập họ đệm (tối đa 50 ký tự): ").strip()
+            if len(ho_dem) > 50:
+                print("Họ đệm không được vượt quá 50 ký tự.")
+                return
+            
             ten = input("Nhập tên (tối đa 50 ký tự): ").strip()
+            if len(ten) > 50:
+                print("Tên không được vượt quá 50 ký tự.")
+                return
+            
             tuoi = int(input("Nhập tuổi: "))
+            if not isinstance(tuoi, int) or tuoi <= 0:
+                print("Tuổi phải là một số nguyên dương.")
+                return
+            
             ngay_sinh_str = input("Nhập ngày tháng năm sinh (dd/mm/yyyy): ").strip()
-            ngay_sinh = datetime.strptime(ngay_sinh_str, '%d/%m/%Y')
+            try:
+                ngay_sinh = datetime.strptime(ngay_sinh_str, '%d/%m/%Y')
+            except ValueError:
+                print("Ngày sinh không hợp lệ. Vui lòng nhập theo định dạng dd/mm/yyyy.")
+                return
+            
             so_dien_thoai = input("Nhập số điện thoại (10 ký tự): ").strip()
+            if len(so_dien_thoai) != 10 or not so_dien_thoai.isdigit():
+                print("Số điện thoại phải là 10 ký tự và chỉ chứa chữ số.")
+                return
+            
             ma_lop = input("Nhập mã lớp (tối đa 10 ký tự): ").strip()
-
+            if len(ma_lop) > 10:
+                print("Mã lớp không được vượt quá 10 ký tự.")
+                return
+            
+            # Tạo đối tượng học sinh
             hoc_sinh = {
                 "ma_hoc_sinh": ma_hoc_sinh,
                 "ho_dem": ho_dem,
@@ -36,8 +71,11 @@ def quan_ly_thong_tin_hoc_sinh():
                 "so_dien_thoai": so_dien_thoai,
                 "ma_lop": ma_lop
             }
+
+            # Thêm học sinh vào danh sách
             danh_sach_hoc_sinh.append(hoc_sinh)
             print("Học sinh đã được thêm thành công.")
+        
         except ValueError:
             print("Dữ liệu không hợp lệ. Vui lòng nhập lại.")
 
