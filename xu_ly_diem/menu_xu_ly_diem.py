@@ -59,9 +59,9 @@ def menu_xu_ly_diem_hoc_sinh():
             return
         with open("file_csv/ds_diem.csv", mode="w", newline="") as open_file:
             csv_writer = csv.writer(open_file)
-            csv_writer.writerow(danh_sach[0].keys()) 
+            csv_writer.writerow(danh_sach) 
             for hs in danh_sach:
-                csv_writer.writerow(hs.values())
+                csv_writer.writerow(hs)
         print("Lưu danh sách học sinh thành công.")
     def doc_file_csv():
         danh_sach = []
@@ -111,6 +111,7 @@ def menu_xu_ly_diem_hoc_sinh():
         else:
             ket_qua.sort(key=lambda x: (x['ma_hoc_sinh'], x['diem_tb']))
             hien_thi_danh_sach_hoc_sinh(ket_qua)
+            danh_sach.append(hien_thi_danh_sach_hoc_sinh)
 
     def xep_hoc_sinh_theo_toan_truong(danh_sach):
         tieu_chi = input("Sắp xếp theo (1. Điểm TB, 2. Mã HS): ")

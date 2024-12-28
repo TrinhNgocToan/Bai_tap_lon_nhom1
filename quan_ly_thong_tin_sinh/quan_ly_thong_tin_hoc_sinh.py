@@ -119,13 +119,14 @@ def quan_ly_thong_tin_hoc_sinh():
         if ket_qua:
             print("Kết quả tìm kiếm:")
             for hs in ket_qua:
+                print("mã học sinh,họ đệm,tên,tuổi")
                 print(f"{hs['ma_hoc_sinh']} - {hs['ho_dem']} {hs['ten']} - {hs['tuoi']} tuổi")
         else:
             print("Không tìm thấy học sinh nào!")
 
     def doc_danh_sach_tu_file():
         try:
-            with open("Bai_tap_lon_nhom1/file_csv/ds_hoc_sinh.csv", mode="r", newline="") as open_file:
+            with open("file_csv/ds_hoc_sinh.csv", mode="r", newline="") as open_file:
                 csv_reader = csv.DictReader(open_file)
                 danh_sach_hoc_sinh.clear()
                 for row in csv_reader:
@@ -138,6 +139,7 @@ def quan_ly_thong_tin_hoc_sinh():
                         "so_dien_thoai": row['so_dien_thoai'],
                         "ma_lop": row['ma_lop']
                     })
+                    print(row)
             print("Đọc danh sách học sinh từ file thành công.")
         except FileNotFoundError:
             print("File không tồn tại.")
