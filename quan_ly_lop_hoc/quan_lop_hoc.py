@@ -206,63 +206,81 @@ def chinh_sua_lop_hoc():
     except ValueError:
         print("Lỗi nhập liệu! Vui lòng nhập một giá trị hợp lệ.")
 
-def tim_kiem_lop_hoc():
-    tu_khoa = input("Nhập tên lớp học để tìm kiếm: ").strip()
-    try:
-        with open("package_quan_ly_lop_hoc/file_ds_lop_hoc.csv", mode="r") as file:
-            lines = file.readlines()
-            ket_qua = []
-            so_thu_tu = 1
-            for line in lines:
-                if tu_khoa.lower() in line.lower():
-                    ket_qua.append(f"{so_thu_tu}. {line.strip()}")
-                    so_thu_tu += 1
-
-            if ket_qua:
-                print("Lớp học tìm thấy:")
-                for lop in ket_qua:
-                    print(lop)
-            else:
-                print("Không tìm thấy lớp học khớp với yêu cầu.")
-    except FileNotFoundError:
-        print("Tệp danh sách lớp học không tìm thấy.")
-
 import csv
 
-def doc_va_luu_danh_sach(danh_sach_lop_hoc):
-    while True:
-        print("\n--- Quản lý danh sách lớp học ---")
-        print("1. Đọc danh sách từ file")
-        print("2. Lưu danh sách vào file")
-        print("3. Thoát")
+def tim_kiem_lop_hoc():
+    file_path = 'file_csv/ds_lop_hoc.csv'  # Đường dẫn tới file ds_lop_hoc.csv
 
+    try:
+        # Nhập từ khóa tìm kiếm
+        tu_khoa = input("Nhập mã lớp hoặc tên lớp học để tìm kiếm: ").strip()
+
+        # Đọc dữ liệu từ file
+        with open(file_path, mode="r", encoding="utf-8") as file:
+            reader = csv.DictReader(file)
+            danh_sach_lop_hoc = list(reader)
+
+        # Tìm kiếm lớp học theo mã hoặc tên lớp
+        ket_qua = [lop for lop in danh_sach_lop_hoc if tu_khoa.lower() in lop['Mã lớp'].lower() or tu_khoa.lower() in lop['Tên lớp'].lower()]
+
+        if ket_qua:
+            print("Lớp học tìm thấy:")
+            for lop in ket_qua:
+                print(f"Mã lớp: {lop['Mã lớp']}, Tên lớp: {lop['Tên lớp']}, Số bàn: {lop['Số bàn']}")
+                if 'Danh sách học sinh' in lop and lop['Danh sách học sinh'].strip():
+                    print(f"Danh sách học sinh: {lop['Danh sách học sinh']}")
+                else:
+                    print("Danh sách học sinh: Không có thông tin.")
+        else:
+            print("Không tìm thấy lớp học khớp với yêu cầu.")
+
+    except FileNotFoundError:
+        print("Tệp ds_lop_hoc.csv không tồn tại!")
+    except KeyError:
+        print("Tệp ds_lop_hoc.csv không đúng định dạng yêu cầu!")
+
+import csv
+import os
+
+def doc_va_luu_danh_sach():
+    file_path = 'file_csv/ds_lop_hoc.csv'  # Đường dẫn tới file ds_lop_hoc.csv
+
+    danh_sach_lop_hoc = {}
+
+    # Kiểm tra và đọc file nếu tồn tại
+    if os.path.exists(file_path):
         try:
-            lua_chon = int(input("Chọn chức năng (1-3): "))
-            if lua_chon == 1:
-                try:
-                    with open(file="file_csv/ds_lop_hoc.csv", mode="r") as open_file:
-                        csv_reader = csv.reader(open_file)
-                        danh_sach_lop_hoc = {row[0]: {'Tên lớp': row[1], 'Số bàn': int(row[2])} for row in csv_reader}
-                        print("Đã đọc danh sách từ file:")
-                        xem_lop_hoc(danh_sach_lop_hoc)
-                except FileNotFoundError:
-                    print("Không tìm thấy file để đọc danh sách.")
-            elif lua_chon == 2:
-                try:
-                    with open(file="file_csv/ds_lop_hoc.csv", mode="w", newline='') as open_file:
-                        csv_writer = csv.writer(open_file)
-                        for ma_lop, thong_tin in danh_sach_lop_hoc.items():
-                            csv_writer.writerow([ma_lop, thong_tin['Tên lớp'], thong_tin['Số bàn']])
-                        print("Danh sách đã được lưu vào file.")
-                except Exception as e:
-                    print(f"Lỗi khi lưu danh sách vào file: {e}")
-            elif lua_chon == 3:
-                print("Thoát quản lý danh sách lớp học.")
-                break
-            else:
-                print("Lựa chọn không hợp lệ. Vui lòng thử lại.")
-        except ValueError:
-            print("Vui lòng nhập số nguyên từ 1 đến 3.")
+            with open(file_path, mode='r', encoding='utf-8') as file:
+                csv_reader = csv.DictReader(file)
+                for row in csv_reader:
+                    danh_sach_lop_hoc[row['Mã lớp']] = {
+                        'Tên lớp': row['Tên lớp'],
+                        'Số bàn': int(row['Số bàn']),
+                        'Danh sách học sinh': row['Danh sách học sinh'] if 'Danh sách học sinh' in row else ''
+                    }
+            print("Dữ liệu đã được đọc từ file ds_lop_hoc.csv:")
+            for ma_lop, thong_tin in danh_sach_lop_hoc.items():
+                print(f"Mã lớp: {ma_lop}, Tên lớp: {thong_tin['Tên lớp']}, Số bàn: {thong_tin['Số bàn']}, Danh sách học sinh: {thong_tin['Danh sách học sinh']}")
+        except Exception as e:
+            print(f"Lỗi khi đọc file: {e}")
+    else:
+        print("File ds_lop_hoc.csv không tồn tại. Bắt đầu với danh sách trống.")
 
-    return danh_sach_lop_hoc
+    # Lưu dữ liệu vào file
+    try:
+        with open(file_path, mode='w', encoding='utf-8', newline='') as file:
+            fieldnames = ['Mã lớp', 'Tên lớp', 'Số bàn', 'Danh sách học sinh']
+            csv_writer = csv.DictWriter(file, fieldnames=fieldnames)
+
+            csv_writer.writeheader()
+            for ma_lop, thong_tin in danh_sach_lop_hoc.items():
+                csv_writer.writerow({
+                    'Mã lớp': ma_lop,
+                    'Tên lớp': thong_tin['Tên lớp'],
+                    'Số bàn': thong_tin['Số bàn'],
+                    'Danh sách học sinh': thong_tin['Danh sách học sinh']
+                })
+            print("Dữ liệu đã được lưu vào file ds_lop_hoc.csv.")
+    except Exception as e:
+        print(f"Lỗi khi lưu file: {e}")
 
