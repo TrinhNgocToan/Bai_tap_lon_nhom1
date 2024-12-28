@@ -152,4 +152,3 @@ def quan_ly_thong_tin_hoc_sinh():
                 print("Lựa chọn không hợp lệ. Vui lòng thử lại.")
         except ValueError:
             print("Vui lòng nhập số từ 1 đến 8.")
-quan_ly_thong_tin_hoc_sinh()
