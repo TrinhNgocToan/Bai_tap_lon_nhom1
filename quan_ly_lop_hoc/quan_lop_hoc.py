@@ -68,9 +68,16 @@ def xem_lop_hoc():
 
 import csv
 
+import csv
+
 def them_lop_hoc():
     file_path = 'file_csv\ds_lop_hoc.csv'  # Đường dẫn tới file ds_lop_hoc.csv
-    ma_lop = input("Nhập mã lớp: ")
+    ma_lop = input("Nhập mã lớp (tối đa 10 ký tự): ")
+
+    # Kiểm tra mã lớp không vượt quá 10 ký tự
+    if len(ma_lop) > 10:
+        print("Mã lớp không được vượt quá 10 ký tự. Vui lòng nhập lại.")
+        return
 
     # Kiểm tra mã lớp đã tồn tại trong file
     try:
@@ -84,9 +91,21 @@ def them_lop_hoc():
         # File chưa tồn tại, sẽ được tạo khi ghi dữ liệu
         pass
 
-    ten_lop = input("Nhập tên lớp: ")
+    ten_lop = input("Nhập tên lớp (tối đa 20 ký tự): ")
+
+    # Kiểm tra tên lớp không vượt quá 20 ký tự
+    if len(ten_lop) > 20:
+        print("Tên lớp không được vượt quá 20 ký tự. Vui lòng nhập lại.")
+        return
+
     try:
-        so_ban = int(input("Nhập số bàn: "))
+        so_ban = int(input("Nhập số bàn (tối đa 40 bàn): "))
+
+        # Kiểm tra số bàn phải là số nguyên và không vượt quá 40
+        if so_ban <= 0 or so_ban > 40:
+            print("Số bàn phải là một số nguyên dương và không vượt quá 40. Vui lòng nhập lại.")
+            return
+
         new_row = {'Mã lớp': ma_lop, 'Tên lớp': ten_lop, 'Số bàn': so_ban}
 
         # Ghi dữ liệu vào file (thêm tiêu đề nếu file rỗng hoặc chưa tồn tại)
@@ -110,31 +129,30 @@ def them_lop_hoc():
 import csv
 
 def xoa_lop_hoc():
-    file_path = 'file_csv\ds_lop_hoc.csv'  # Đường dẫn tới file ds_lop_hoc.csv
+    file_path = 'file_csv\ds_lop_hoc.csv' 
     ma_lop = input("Nhập mã lớp cần xóa: ")
     danh_sach_lop_hoc = []
     lop_ton_tai = False
 
-    # Đọc dữ liệu từ file
     try:
         with open(file_path, mode='r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for row in reader:
                 if row['Mã lớp'] == ma_lop:
-                    lop_ton_tai = True  # Đánh dấu lớp cần xóa
+                    lop_ton_tai = True  
                 else:
-                    danh_sach_lop_hoc.append(row)  # Giữ lại các lớp khác
+                    danh_sach_lop_hoc.append(row)  
     except FileNotFoundError:
         print("File không tồn tại. Không thể xóa lớp học.")
         return
 
-    # Nếu lớp học tồn tại, ghi lại danh sách mới vào file
+   
     if lop_ton_tai:
         with open(file_path, mode='w', encoding='utf-8', newline='') as file:
             fieldnames = ['Mã lớp', 'Tên lớp', 'Số bàn']
             writer = csv.DictWriter(file, fieldnames=fieldnames)
-            writer.writeheader()  # Ghi tiêu đề
-            writer.writerows(danh_sach_lop_hoc)  # Ghi các lớp còn lại
+            writer.writeheader() 
+            writer.writerows(danh_sach_lop_hoc) 
         print(f"Lớp học với mã {ma_lop} đã được xóa!")
     else:
         print(f"Lớp học với mã {ma_lop} không tồn tại!")
@@ -145,7 +163,7 @@ def xoa_lop_hoc():
 import csv
 
 def chinh_sua_lop_hoc():
-    file_path = 'file_csv\ds_lop_hoc.csv'  # Đường dẫn tới file ds_lop_hoc.csv trong Explorer
+    file_path = 'file_csv\ds_lop_hoc.csv'  
 
     try:
         # Đọc dữ liệu từ file
@@ -209,7 +227,7 @@ def chinh_sua_lop_hoc():
 import csv
 
 def tim_kiem_lop_hoc():
-    file_path = 'file_csv/ds_lop_hoc.csv'  # Đường dẫn tới file ds_lop_hoc.csv
+    file_path = 'file_csv/ds_lop_hoc.csv' 
 
     try:
         # Nhập từ khóa tìm kiếm
@@ -243,8 +261,7 @@ import csv
 import os
 
 def doc_va_luu_danh_sach():
-    file_path = 'file_csv/ds_lop_hoc.csv'  # Đường dẫn tới file ds_lop_hoc.csv
-
+    file_path = 'file_csv/ds_lop_hoc.csv'  
     danh_sach_lop_hoc = {}
 
     # Kiểm tra và đọc file nếu tồn tại
