@@ -108,7 +108,7 @@ def quan_ly_thong_tin_hoc_sinh():
 
     def luu_danh_sach_vao_file():
         try:
-            with open("Bai_tap_lon_nhom1/file_csv/ds_hoc_sinh.csv", mode="w", newline="") as open_file:
+            with open("file_csv\ds_hoc_sinh.csv", mode="w", newline="") as open_file:
                 fieldnames = ["ma_hoc_sinh", "ho_dem", "ten", "tuoi", "ngay_sinh", "so_dien_thoai", "ma_lop"]
                 csv_writer = csv.DictWriter(open_file, fieldnames=fieldnames)
                 csv_writer.writeheader()
@@ -152,3 +152,4 @@ def quan_ly_thong_tin_hoc_sinh():
                 print("Lựa chọn không hợp lệ. Vui lòng thử lại.")
         except ValueError:
             print("Vui lòng nhập số từ 1 đến 8.")
+quan_ly_thong_tin_hoc_sinh()
