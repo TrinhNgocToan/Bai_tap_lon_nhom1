@@ -1,8 +1,8 @@
 import csv
 from datetime import datetime
-
 def menu_xu_ly_diem_hoc_sinh():
     danh_sach_hoc_sinh = []  
+
     def nhap_danh_sach_hoc_sinh():
         danh_sach = []
         so_luong = int(input("Nhập số lượng học sinh: "))
@@ -19,7 +19,12 @@ def menu_xu_ly_diem_hoc_sinh():
             diem_toan = float(input("Điểm Toán: "))
             diem_ly = float(input("Điểm Lý: "))
             diem_hoa = float(input("Điểm Hóa: "))
-            diem_tb = (diem_toan + diem_ly + diem_hoa) / 3
+            diem_anh = float(input("Điểm Anh: "))
+            diem_van = float(input("Điểm Văn: "))
+            diem_tb = (diem_toan + diem_ly + diem_hoa + diem_anh + diem_van) / 5
+            hoc_ky = input("Học kỳ: ")
+            nam_hoc = input("Năm học: ")
+            ma_hoc_ky = input("Mã học kỳ: ")
 
             thong_tin_hoc_sinh = {
                 "ma_hoc_sinh": ma_hoc_sinh,
@@ -31,35 +36,33 @@ def menu_xu_ly_diem_hoc_sinh():
                 "diem_toan": diem_toan,
                 "diem_ly": diem_ly,
                 "diem_hoa": diem_hoa,
-                "diem_tb": diem_tb
+                "diem_anh": diem_anh,
+                "diem_van": diem_van,
+                "diem_tb": diem_tb,
+                "hoc_ky": hoc_ky,
+                "nam_hoc": nam_hoc,
+                "ma_hoc_ky": ma_hoc_ky
             }
-
             danh_sach.append(thong_tin_hoc_sinh)
-
         return danh_sach
-
     def hien_thi_danh_sach_hoc_sinh(danh_sach):
         if not danh_sach:
             print("Danh sách học sinh trống.")
             return
-
-        print("Mã HS | Họ và tên       | Tuổi | Ngày sinh | SĐT       | Lớp | Toán | Lý | Hóa | Điểm TB")
-        print("-" * 80)
+        print("Mã HS | Họ và tên       | Tuổi | Ngày sinh | SĐT       | Lớp | Toán | Lý | Hóa | Anh | Văn | Điểm TB | Học kỳ | Năm học | Mã học kỳ")
+        print("-" * 100)
         for hs in danh_sach:
-            print(f"{hs['ma_hoc_sinh']} | {hs['ho_va_ten']:<15} | {hs['tuoi']}   | {hs['ngay_sinh']} | {hs['so_dien_thoai']:<10} | {hs['lop']} | {hs['diem_toan']:.1f} | {hs['diem_ly']:.1f} | {hs['diem_hoa']:.1f} | {hs['diem_tb']:.2f}")
-
+            print(f"{hs['ma_hoc_sinh']} | {hs['ho_va_ten']:<15} | {hs['tuoi']}   | {hs['ngay_sinh']} | {hs['so_dien_thoai']:<10} | {hs['lop']} | {hs['diem_toan']:.1f} | {hs['diem_ly']:.1f} | {hs['diem_hoa']:.1f} | {hs['diem_anh']:.1f} | {hs['diem_van']:.1f} | {hs['diem_tb']:.2f} | {hs['hoc_ky']} | {hs['nam_hoc']} | {hs['ma_hoc_ky']}")
     def luu_file_csv(danh_sach):
         if not danh_sach:
             print("Danh sách trống, không có gì để lưu.")
             return
-
         with open("file_csv/ds_diem.csv", mode="w", newline="") as open_file:
             csv_writer = csv.writer(open_file)
-            csv_writer.writerow(danh_sach[0].keys())  # Ghi header
+            csv_writer.writerow(danh_sach[0].keys()) 
             for hs in danh_sach:
                 csv_writer.writerow(hs.values())
         print("Lưu danh sách học sinh thành công.")
-
     def doc_file_csv():
         danh_sach = []
         try:
@@ -70,13 +73,14 @@ def menu_xu_ly_diem_hoc_sinh():
                     row["diem_toan"] = float(row["diem_toan"])
                     row["diem_ly"] = float(row["diem_ly"])
                     row["diem_hoa"] = float(row["diem_hoa"])
+                    row["diem_anh"] = float(row["diem_anh"])
+                    row["diem_van"] = float(row["diem_van"])
                     row["diem_tb"] = float(row["diem_tb"])
+                    print(row)
                     danh_sach.append(row)
         except FileNotFoundError:
             print("Chưa có tệp dữ liệu.")
-
         return danh_sach
-
     def sua_diem_hoc_sinh(danh_sach):
         ma_hoc_sinh = input("Nhập mã học sinh cần sửa điểm: ")
         for hs in danh_sach:
@@ -85,11 +89,12 @@ def menu_xu_ly_diem_hoc_sinh():
                 hs['diem_toan'] = float(input("Nhập điểm Toán mới: "))
                 hs['diem_ly'] = float(input("Nhập điểm Lý mới: "))
                 hs['diem_hoa'] = float(input("Nhập điểm Hóa mới: "))
-                hs['diem_tb'] = (hs['diem_toan'] + hs['diem_ly'] + hs['diem_hoa']) / 3
+                hs['diem_anh'] = float(input("Nhập điểm Anh mới: "))
+                hs['diem_van'] = float(input("Nhập điểm Văn mới: "))
+                hs['diem_tb'] = (hs['diem_toan'] + hs['diem_ly'] + hs['diem_hoa'] + hs['diem_anh'] + hs['diem_van']) / 5
                 print("Đã cập nhật điểm thành công.")
                 return
         print("Không tìm thấy học sinh với mã này.")
-
     def tim_kiem_hoc_sinh_theo_lop_hoc_ky_nam(danh_sach):
         lop = input("Nhập lớp cần tìm kiếm: ")
         ket_qua = [hs for hs in danh_sach if hs['lop'] == lop]
@@ -131,7 +136,6 @@ def menu_xu_ly_diem_hoc_sinh():
         for hs in ket_qua:
             loai = "Giỏi" if hs['diem_tb'] >= 8 else "Khá" if hs['diem_tb'] >= 6 else "Trung bình"
             print(f"{hs['ma_hoc_sinh']} - {hs['ho_va_ten']} - {loai}")
-
     def top_hoc_sinh(danh_sach):
         so_hoc_sinh = len(danh_sach)
         if so_hoc_sinh < 10:
@@ -172,18 +176,16 @@ def menu_xu_ly_diem_hoc_sinh():
         print("5. Đọc danh sách từ file CSV")
         print("6. Tìm kiếm học sinh theo lớp, học kỳ, năm học")
         print("7. Tìm kiếm danh sách học sinh theo lớp hoặc tên lớp")
-        print("8. Xem danh sách học sinh toàn trường theo tiêu chí")
+        print("8. Xem danh sách học sinh toàn trường được sắp xếp theo điểm trung bình hoặc mã học sinh ")
         print("9. Xếp loại học sinh theo lớp")
         print("10. Xem top 10 học sinh cao/ thấp điểm nhất")
         print("11. Thêm học sinh vào lớp mới")
         print("0. Thoát")
-
         lua_chon = input("Nhập lựa chọn: ")
-
         if lua_chon == "1":
             hien_thi_danh_sach_hoc_sinh(danh_sach_hoc_sinh)
         elif lua_chon == "2":
-            danh_sach_hoc_sinh += nhap_danh_sach_hoc_sinh()
+            danh_sach_hoc_sinh = nhap_danh_sach_hoc_sinh()
         elif lua_chon == "3":
             luu_file_csv(danh_sach_hoc_sinh)
         elif lua_chon == "4":
@@ -203,7 +205,8 @@ def menu_xu_ly_diem_hoc_sinh():
         elif lua_chon == "11":
             them_hoc_sinh_vao_lop(danh_sach_hoc_sinh)
         elif lua_chon == "0":
-            print("Chương trình kết thúc.")
+            print("Thoát chương trình.")
             break
         else:
-            print("Lựa chọn không hợp lệ. Vui lòng thử lại.")
+            print("Lựa chọn không hợp lệ, vui lòng nhập lại.")
+
