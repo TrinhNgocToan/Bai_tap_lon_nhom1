@@ -1,7 +1,7 @@
 import csv
 from datetime import datetime
 def menu_xu_ly_diem_hoc_sinh():
-    danh_sach_hoc_sinh = []  
+    danh_sach_hoc_sinh = []
 
     def nhap_danh_sach_hoc_sinh():
         danh_sach = []
@@ -9,23 +9,111 @@ def menu_xu_ly_diem_hoc_sinh():
 
         for i in range(so_luong):
             print(f"Nhập thông tin cho học sinh thứ {i + 1}:")
-            ma_hoc_sinh = input("Mã học sinh: ")
-            ho_va_ten = input("Họ và tên: ")
-            tuoi = int(input("Tuổi: "))
-            ngay_sinh = input("Ngày sinh (dd/mm/yyyy): ")
-            ngay_sinh = datetime.strptime(ngay_sinh, '%d/%m/%Y')
-            so_dien_thoai = input("Số điện thoại: ")
-            lop = input("Lớp: ")
-            diem_toan = float(input("Điểm Toán: "))
-            diem_ly = float(input("Điểm Lý: "))
-            diem_hoa = float(input("Điểm Hóa: "))
-            diem_anh = float(input("Điểm Anh: "))
-            diem_van = float(input("Điểm Văn: "))
+            while True:
+                ma_hoc_sinh = input("Mã học sinh (10 ký tự): ")
+                if len(ma_hoc_sinh) <= 10:
+                    break
+                else:
+                    print("Mã học sinh phải có đúng 10 ký tự.")
+            while True:
+                ho_va_ten = input("Họ và tên (tối đa 50 ký tự): ")
+                if len(ho_va_ten) <= 50:
+                    break
+                else:
+                    print("Họ và tên không được vượt quá 50 ký tự.")
+            while True:
+                try:
+                    tuoi = int(input("Tuổi: "))
+                    if tuoi > 0:
+                        break
+                    else:
+                        print("Tuổi phải là một số dương.")
+                except ValueError:
+                    print("Vui lòng nhập tuổi là một số nguyên hợp lệ.")
+            while True:
+                try:
+                    ngay_sinh = input("Ngày sinh (dd/mm/yyyy): ")
+                    ngay_sinh = datetime.strptime(ngay_sinh, '%d/%m/%Y')
+                    break
+                except ValueError:
+                    print("Ngày sinh không hợp lệ, vui lòng nhập lại theo định dạng dd/mm/yyyy.")
+            while True:
+                so_dien_thoai = input("Số điện thoại (10 ký tự): ")
+                if len(so_dien_thoai) == 10 and so_dien_thoai.isdigit():
+                    break
+                else:
+                    print("Số điện thoại phải có 10 ký tự và là số.")
+            while True:
+                lop = input("Mã lớp (10 ký tự): ")
+                if len(lop) <= 10:
+                    break
+                else:
+                    print("Mã lớp phải có đúng 10 ký tự.")
+            while True:
+                try:
+                    diem_toan = float(input("Điểm Toán (0 <= điểm <= 10): "))
+                    if 0 <= diem_toan <= 10:
+                        break
+                    else:
+                        print("Điểm phải nằm trong khoảng từ 0 đến 10.")
+                except ValueError:
+                    print("Vui lòng nhập điểm là một số hợp lệ.")
+            
+            while True:
+                try:
+                    diem_ly = float(input("Điểm Lý (0 <= điểm <= 10): "))
+                    if 0 <= diem_ly <= 10:
+                        break
+                    else:
+                        print("Điểm phải nằm trong khoảng từ 0 đến 10.")
+                except ValueError:
+                    print("Vui lòng nhập điểm là một số hợp lệ.")
+            while True:
+                try:
+                    diem_hoa = float(input("Điểm Hóa (0 <= điểm <= 10): "))
+                    if 0 <= diem_hoa <= 10:
+                        break
+                    else:
+                        print("Điểm phải nằm trong khoảng từ 0 đến 10.")
+                except ValueError:
+                    print("Vui lòng nhập điểm là một số hợp lệ.")
+            while True:
+                try:
+                    diem_anh = float(input("Điểm Anh (0 <= điểm <= 10): "))
+                    if 0 <= diem_anh <= 10:
+                        break
+                    else:
+                        print("Điểm phải nằm trong khoảng từ 0 đến 10.")
+                except ValueError:
+                    print("Vui lòng nhập điểm là một số hợp lệ.")
+            while True:
+                try:
+                    diem_van = float(input("Điểm Văn (0 <= điểm <= 10): "))
+                    if 0 <= diem_van <= 10:
+                        break
+                    else:
+                        print("Điểm phải nằm trong khoảng từ 0 đến 10.")
+                except ValueError:
+                    print("Vui lòng nhập điểm là một số hợp lệ.")
             diem_tb = (diem_toan + diem_ly + diem_hoa + diem_anh + diem_van) / 5
-            hoc_ky = input("Học kỳ: ")
-            nam_hoc = input("Năm học: ")
-            ma_hoc_ky = input("Mã học kỳ: ")
-
+            while True:
+                hoc_ky = input("Học kỳ (tối đa 10 ký tự): ")
+                if len(hoc_ky) <= 10:
+                    break
+                else:
+                    print("Học kỳ không được vượt quá 10 ký tự.")
+            while True:
+                nam_hoc = input("Năm học (4 ký tự): ")
+                if len(nam_hoc) == 4 and nam_hoc.isdigit():
+                    break
+                else:
+                    print("Năm học phải có 4 ký tự và là số.")
+            while True:
+                ma_hoc_ky = input("Mã học kỳ (10 ký tự): ")
+                if len(ma_hoc_ky) <= 10:
+                    break
+                else:
+                    print("Mã học kỳ phải có đúng 10 ký tự.")
             thong_tin_hoc_sinh = {
                 "ma_hoc_sinh": ma_hoc_sinh,
                 "ho_va_ten": ho_va_ten,
@@ -44,7 +132,10 @@ def menu_xu_ly_diem_hoc_sinh():
                 "ma_hoc_ky": ma_hoc_ky
             }
             danh_sach.append(thong_tin_hoc_sinh)
+
         return danh_sach
+    danh_sach_hoc_sinh = nhap_danh_sach_hoc_sinh()
+
     def hien_thi_danh_sach_hoc_sinh(danh_sach):
         if not danh_sach:
             print("Danh sách học sinh trống.")
@@ -63,24 +154,16 @@ def menu_xu_ly_diem_hoc_sinh():
             for hs in danh_sach:
                 csv_writer.writerow(hs)
         print("Lưu danh sách học sinh thành công.")
-    def doc_file_csv():
-        danh_sach = []
-        try:
-            with open("file_csv/ds_diem.csv", mode="r") as open_file:
-                csv_reader = csv.DictReader(open_file)
-                for row in csv_reader:
-                    row["tuoi"] = int(row["tuoi"])
-                    row["diem_toan"] = float(row["diem_toan"])
-                    row["diem_ly"] = float(row["diem_ly"])
-                    row["diem_hoa"] = float(row["diem_hoa"])
-                    row["diem_anh"] = float(row["diem_anh"])
-                    row["diem_van"] = float(row["diem_van"])
-                    row["diem_tb"] = float(row["diem_tb"])
-                    print(row)
-                    danh_sach.append(row)
-        except FileNotFoundError:
-            print("Chưa có tệp dữ liệu.")
-        return danh_sach
+    def doc_file_csv(danh_sach: list):
+        with open("file_csv/ds_diem.csv", mode="r", newline="") as open_file:
+            csv_reader = csv.reader(open_file)
+            for hs in csv_reader:
+                print(hs)
+                danh_sach.append(hs)
+        print("Lưu danh sách học sinh thành công.")
+
+
+
     def sua_diem_hoc_sinh(danh_sach):
         ma_hoc_sinh = input("Nhập mã học sinh cần sửa điểm: ")
         for hs in danh_sach:
