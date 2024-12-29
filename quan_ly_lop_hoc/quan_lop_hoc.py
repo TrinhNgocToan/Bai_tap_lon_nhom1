@@ -1,5 +1,4 @@
-danh_sach_lop_hoc = {}
-
+danh_sach_lop_hoc = []
 def menu_quan_ly_lop_hoc():
     while True:
         print("\n--- Quản lý lớp học ---")
@@ -68,54 +67,63 @@ import csv
 
 def them_lop_hoc():
     file_path = 'file_csv\ds_lop_hoc.csv'  
-    ma_lop = input("Nhập mã lớp (tối đa 10 ký tự): ")
+    so_luong = int(input("Nhập số lượng lớp học: "))
 
-    if len(ma_lop) > 10:
-        print("Mã lớp không được vượt quá 10 ký tự. Vui lòng nhập lại.")
-        return
+    for i in range(so_luong):
+        print(f"Nhập thông tin cho lớp học thứ {i + 1}:")
+        
+        ma_lop = input("Nhập mã lớp (tối đa 10 ký tự): ")
 
-    try:
-        with open(file_path, mode='r', encoding='utf-8') as file:
-            reader = csv.DictReader(file)
+        if len(ma_lop) > 10:
+            print("Mã lớp không được vượt quá 10 ký tự. Vui lòng nhập lại.")
+            return
+
+        try:
+            with open(file_path, mode='r', encoding='utf-8') as file:
+                reader = csv.DictReader(file)
             for row in reader:
                 if row['Mã lớp'] == ma_lop:
                     print("Mã lớp đã tồn tại. Vui lòng nhập lại.")
                     return
-    except :
-        pass
-
-    ten_lop = input("Nhập tên lớp (tối đa 20 ký tự): ")
-
-    if len(ten_lop) > 20:
-        print("Tên lớp không được vượt quá 20 ký tự. Vui lòng nhập lại.")
-        return
-
-    try:
-        so_ban = int(input("Nhập số bàn (tối đa 40 bàn): "))
-
-        if so_ban <= 0 or so_ban > 40:
-            print("Số bàn phải là một số nguyên dương và không vượt quá 40. Vui lòng nhập lại.")
-            return
-
-        new_row = {'Mã lớp': ma_lop, 'Tên lớp': ten_lop, 'Số bàn': so_ban}
-
-        
-        file_exists = False
-        try:
-            with open(file_path, mode='r', encoding='utf-8') as file:
-                file_exists = bool(file.read().strip())
-        except FileNotFoundError:
+        except :
             pass
 
-        with open(file_path, mode='a', encoding='utf-8', newline='') as file:
-            writer = csv.DictWriter(file, fieldnames=['Mã lớp', 'Tên lớp', 'Số bàn'])
-            if not file_exists:
-                writer.writeheader() 
-            writer.writerow(new_row) 
+        ten_lop = input("Nhập tên lớp (tối đa 20 ký tự): ")
 
-        print(f"Lớp học {ten_lop} đã được thêm vào file {file_path}!")
-    except ValueError:
-        print("Số bàn phải là một số nguyên. Vui lòng thử lại.")
+        if len(ten_lop) > 20:
+            print("Tên lớp không được vượt quá 20 ký tự. Vui lòng nhập lại.")
+            return
+
+        try:
+            so_ban = int(input("Nhập số bàn (tối đa 40 bàn): "))
+
+            if so_ban < 0 or so_ban > 40:
+                print("Số bàn phải là một số nguyên dương và không vượt quá 40. Vui lòng nhập lại.")
+                return
+            elif so_ban==None:
+                so_ban=0
+                return
+            new_row = {'Mã lớp': ma_lop, 'Tên lớp': ten_lop, 'Số bàn': so_ban}
+
+            
+            file_exists = False
+            try:
+                with open(file_path, mode='r', encoding='utf-8') as file:
+                    file_exists = bool(file.read().strip())
+            except FileNotFoundError:
+                pass
+
+            with open(file_path, mode='a', encoding='utf-8', newline='') as file:
+                writer = csv.DictWriter(file, fieldnames=['Mã lớp', 'Tên lớp', 'Số bàn'])
+                if not file_exists:
+                    writer.writeheader() 
+                writer.writerow(new_row) 
+
+            print(f"Lớp học {ten_lop} đã được thêm vào file {file_path}!")
+        except ValueError:
+            print("Số bàn phải là một số nguyên. Vui lòng thử lại.")
+            
+        
 
 import csv
 
@@ -239,28 +247,29 @@ def tim_kiem_lop_hoc():
         print("Tệp ds_lop_hoc.csv không đúng định dạng yêu cầu!")
 
 import csv
+import os
 
 def doc_va_luu_danh_sach():
-    file_path = r'file_csv\ds_lop_hoc.csv'
-
+    file_path = 'file_csv/ds_lop_hoc.csv'  
     danh_sach_lop_hoc = {}
 
-    try:
-        with open(file_path, mode='r', encoding='utf-8') as file:
-            csv_reader = csv.DictReader(file)
-            for row in csv_reader:
-                danh_sach_lop_hoc[row['Mã lớp']] = {
-                    'Tên lớp': row['Tên lớp'],
-                    'Số bàn': int(row['Số bàn']),
-                    'Danh sách học sinh': row.get('Danh sách học sinh', '')
-                }
-        print("Dữ liệu đã được đọc từ file ds_lop_hoc.csv:")
-        for ma_lop, thong_tin in danh_sach_lop_hoc.items():
-            print(f"Mã lớp: {ma_lop}, Tên lớp: {thong_tin['Tên lớp']}, Số bàn: {thong_tin['Số bàn']}, Danh sách học sinh: {thong_tin['Danh sách học sinh']}")
-    except FileNotFoundError:
+    if os.path.exists(file_path):
+        try:
+            with open(file_path, mode='r', encoding='utf-8') as file:
+                csv_reader = csv.DictReader(file)
+                for row in csv_reader:
+                    danh_sach_lop_hoc[row['Mã lớp']] = {
+                        'Tên lớp': row['Tên lớp'],
+                        'Số bàn': int(row['Số bàn']),
+                        'Danh sách học sinh': row['Danh sách học sinh'] if 'Danh sách học sinh' in row else ''
+                    }
+            print("Dữ liệu đã được đọc từ file ds_lop_hoc.csv:")
+            for ma_lop, thong_tin in danh_sach_lop_hoc.items():
+                print(f"Mã lớp: {ma_lop}, Tên lớp: {thong_tin['Tên lớp']}, Số bàn: {thong_tin['Số bàn']}, Danh sách học sinh: {thong_tin['Danh sách học sinh']}")
+        except Exception as e:
+            print(f"Lỗi khi đọc file: {e}")
+    else:
         print("File ds_lop_hoc.csv không tồn tại. Bắt đầu với danh sách trống.")
-    except Exception as e:
-        print(f"Lỗi khi đọc file: {e}")
 
     try:
         with open(file_path, mode='w', encoding='utf-8', newline='') as file:
@@ -278,4 +287,3 @@ def doc_va_luu_danh_sach():
             print("Dữ liệu đã được lưu vào file ds_lop_hoc.csv.")
     except Exception as e:
         print(f"Lỗi khi lưu file: {e}")
-

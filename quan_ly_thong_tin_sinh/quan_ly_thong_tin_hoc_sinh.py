@@ -21,61 +21,73 @@ def quan_ly_thong_tin_hoc_sinh():
 
     def them_hoc_sinh():
         print("\n--- Thêm học sinh ---")
-        
-        try:
-            ma_hoc_sinh = input("Nhập mã học sinh (tối đa 10 ký tự): ").strip()
-            if len(ma_hoc_sinh) > 10:
-                print("Mã học sinh không được vượt quá 10 ký tự.")
-                return
-            
-            ho_dem = input("Nhập họ đệm (tối đa 50 ký tự): ").strip()
-            if len(ho_dem) > 50:
-                print("Họ đệm không được vượt quá 50 ký tự.")
-                return
-            
-            ten = input("Nhập tên (tối đa 50 ký tự): ").strip()
-            if len(ten) > 50:
-                print("Tên không được vượt quá 50 ký tự.")
-                return
-            
-            tuoi = int(input("Nhập tuổi: "))
-            if not isinstance(tuoi, int) or tuoi <= 0:
-                print("Tuổi phải là một số nguyên dương.")
-                return
-            
-            ngay_sinh_str = input("Nhập ngày tháng năm sinh (dd/mm/yyyy): ").strip()
+        so_luong = int(input("Nhập số lượng học sinh: "))
+
+        for i in range(so_luong):
+            print(f"Nhập thông tin cho học sinh thứ {i + 1}:")
             try:
-                ngay_sinh = datetime.strptime(ngay_sinh_str, '%d/%m/%Y')
+                ma_hoc_sinh=str(input("Nhập mã học sinh: ")).strip()
+                assert len(ma_hoc_sinh)<=10,"Chỉ được nhập 10 kí tự trở xuống"
+                for hoc_sinh in danh_sach_hoc_sinh:
+                    if hoc_sinh["ma_hoc_sinh"]==danh_sach_hoc_sinh:
+                        print("Mã học sinh bị trùng")
+                    else:
+                        continue
+            
+                ho_dem = input("Nhập họ đệm (tối đa 50 ký tự): ").strip()
+                if len(ho_dem) > 50:
+                    print("Họ đệm không được vượt quá 50 ký tự.")
+                    return
+            
+                ten = input("Nhập tên (tối đa 50 ký tự): ").strip()
+                if len(ten) > 50:
+                    print("Tên không được vượt quá 50 ký tự.")
+                    return
+            
+                tuoi = int(input("Nhập tuổi: "))
+                if not isinstance(tuoi, int) or tuoi <= 0:
+                    print("Tuổi phải là một số nguyên dương.")
+                    return
+            
+                try:
+                    ngay_sinh_str=input("Nhập ngày sinh của bạn (dd/mm/yyyy): ")
+                    ngay_sinh = datetime.strptime(ngay_sinh_str, "%d/%m/%Y")
+                    if ngay_sinh.year <= 0:
+                        print("Năm sinh phải lớn hơn 0")
+                    elif ngay_sinh > datetime.now():
+                        print("Ngày sinh không thể là ngày trong tương lai.")
+                except ValueError:
+                    print("Ngày sinh không hợp lệ. Vui lòng nhập theo định dạng dd/mm/yyyy.")
+                    return
+            
+                so_dien_thoai = input("Nhập số điện thoại (10 ký tự): ").strip()
+                if len(so_dien_thoai) != 10 or not so_dien_thoai.isdigit():
+                    print("Số điện thoại phải là 10 ký tự và chỉ chứa chữ số.")
+                    return
+            
+                ma_lop = input("Nhập mã lớp (tối đa 10 ký tự): ").strip()
+                assert len(ma_lop)<=10,"Chỉ được nhập 10 kí tự"
+                for hoc_sinh in danh_sach_hoc_sinh:
+                    if hoc_sinh["ma_lop"]==danh_sach_hoc_sinh:
+                        print("Mã lớp bị trùng")
+                    else:
+                        continue
+            
+                hoc_sinh = {
+                    "ma_hoc_sinh": ma_hoc_sinh,
+                    "ho_dem": ho_dem,
+                    "ten": ten,
+                    "tuoi": tuoi,
+                    "ngay_sinh": ngay_sinh.strftime('%d/%m/%Y'),
+                    "so_dien_thoai": so_dien_thoai,
+                    "ma_lop": ma_lop
+                    }
+                danh_sach_hoc_sinh.append(hoc_sinh)
+                
             except ValueError:
-                print("Ngày sinh không hợp lệ. Vui lòng nhập theo định dạng dd/mm/yyyy.")
-                return
-            
-            so_dien_thoai = input("Nhập số điện thoại (10 ký tự): ").strip()
-            if len(so_dien_thoai) != 10 or not so_dien_thoai.isdigit():
-                print("Số điện thoại phải là 10 ký tự và chỉ chứa chữ số.")
-                return
-            
-            ma_lop = input("Nhập mã lớp (tối đa 10 ký tự): ").strip()
-            if len(ma_lop) > 10:
-                print("Mã lớp không được vượt quá 10 ký tự.")
-                return
-            
-            hoc_sinh = {
-                "ma_hoc_sinh": ma_hoc_sinh,
-                "ho_dem": ho_dem,
-                "ten": ten,
-                "tuoi": tuoi,
-                "ngay_sinh": ngay_sinh.strftime('%d/%m/%Y'),
-                "so_dien_thoai": so_dien_thoai,
-                "ma_lop": ma_lop
-            }
-
-            danh_sach_hoc_sinh.append(hoc_sinh)
-            print("Học sinh đã được thêm thành công.")
-        
-        except ValueError:
-            print("Dữ liệu không hợp lệ. Vui lòng nhập lại.")
-
+                print("Dữ liệu không hợp lệ. Vui lòng nhập lại.")
+        print("Học sinh đã được thêm thành công.")
+        return danh_sach_hoc_sinh
     def xoa_hoc_sinh():
         print("\n--- Xóa học sinh ---")
         ma_hoc_sinh = input("Nhập mã học sinh cần xóa: ").strip()
