@@ -63,7 +63,6 @@ def xem_lop_hoc():
     except :
         print("Tệp ds_lop_hoc.csv không đúng định dạng yêu cầu!")
 
-import csv
 
 import csv
 
@@ -240,29 +239,28 @@ def tim_kiem_lop_hoc():
         print("Tệp ds_lop_hoc.csv không đúng định dạng yêu cầu!")
 
 import csv
-import os
 
 def doc_va_luu_danh_sach():
-    file_path = 'file_csv/ds_lop_hoc.csv'  
+    file_path = r'file_csv\ds_lop_hoc.csv'
+
     danh_sach_lop_hoc = {}
 
-    if os.path.exists(file_path):
-        try:
-            with open(file_path, mode='r', encoding='utf-8') as file:
-                csv_reader = csv.DictReader(file)
-                for row in csv_reader:
-                    danh_sach_lop_hoc[row['Mã lớp']] = {
-                        'Tên lớp': row['Tên lớp'],
-                        'Số bàn': int(row['Số bàn']),
-                        'Danh sách học sinh': row['Danh sách học sinh'] if 'Danh sách học sinh' in row else ''
-                    }
-            print("Dữ liệu đã được đọc từ file ds_lop_hoc.csv:")
-            for ma_lop, thong_tin in danh_sach_lop_hoc.items():
-                print(f"Mã lớp: {ma_lop}, Tên lớp: {thong_tin['Tên lớp']}, Số bàn: {thong_tin['Số bàn']}, Danh sách học sinh: {thong_tin['Danh sách học sinh']}")
-        except Exception as e:
-            print(f"Lỗi khi đọc file: {e}")
-    else:
+    try:
+        with open(file_path, mode='r', encoding='utf-8') as file:
+            csv_reader = csv.DictReader(file)
+            for row in csv_reader:
+                danh_sach_lop_hoc[row['Mã lớp']] = {
+                    'Tên lớp': row['Tên lớp'],
+                    'Số bàn': int(row['Số bàn']),
+                    'Danh sách học sinh': row.get('Danh sách học sinh', '')
+                }
+        print("Dữ liệu đã được đọc từ file ds_lop_hoc.csv:")
+        for ma_lop, thong_tin in danh_sach_lop_hoc.items():
+            print(f"Mã lớp: {ma_lop}, Tên lớp: {thong_tin['Tên lớp']}, Số bàn: {thong_tin['Số bàn']}, Danh sách học sinh: {thong_tin['Danh sách học sinh']}")
+    except FileNotFoundError:
         print("File ds_lop_hoc.csv không tồn tại. Bắt đầu với danh sách trống.")
+    except Exception as e:
+        print(f"Lỗi khi đọc file: {e}")
 
     try:
         with open(file_path, mode='w', encoding='utf-8', newline='') as file:
