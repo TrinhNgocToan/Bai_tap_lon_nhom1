@@ -4,90 +4,103 @@ from datetime import datetime
 def quan_ly_thong_tin_hoc_sinh():
     danh_sach_hoc_sinh = []
 
-    def xem_hoc_sinh():
+    def xem_danh_sach():
         print("\n--- Danh sách học sinh ---")
         if not danh_sach_hoc_sinh:
             print("Danh sách học sinh trống.")
         else:
-            for hs in danh_sach_hoc_sinh:
-                print(f"Mã HS: {hs['ma_hoc_sinh']}, Họ đệm: {hs['ho_dem']}, "
-                      f"Tên: {hs['ten']}, Tuổi: {hs['tuoi']}, "
-                      f"Ngày sinh: {hs['ngay_sinh']}, SĐT: {hs['so_dien_thoai']}, "
-                      f"Mã lớp: {hs['ma_lop']}")
-
-    from datetime import datetime
-
-    danh_sach_hoc_sinh = []
+            for hoc_sinh in danh_sach_hoc_sinh:
+                print(f"Mã HS: {hoc_sinh['ma_hoc_sinh']}, Họ đệm: {hoc_sinh['ho_dem']}, "
+                      f"Tên: {hoc_sinh['ten']}, Tuổi: {hoc_sinh['tuoi']}, "
+                      f"Ngày sinh: {hoc_sinh['ngay_sinh']}, SĐT: {hoc_sinh['so_dien_thoai']}, "
+                      f"Mã lớp: {hoc_sinh['ma_lop']}")
 
     def them_hoc_sinh():
         print("\n--- Thêm học sinh ---")
-        so_luong = int(input("Nhập số lượng học sinh: "))
-
-        for i in range(so_luong):
-            print(f"Nhập thông tin cho học sinh thứ {i + 1}:")
+        while True:
             try:
-                ma_hoc_sinh=str(input("Nhập mã học sinh: ")).strip()
-                assert len(ma_hoc_sinh)<=10,"Chỉ được nhập 10 kí tự trở xuống"
-                for hoc_sinh in danh_sach_hoc_sinh:
-                    if hoc_sinh["ma_hoc_sinh"]==danh_sach_hoc_sinh:
-                        print("Mã học sinh bị trùng")
-                    else:
-                        continue
-            
-                ho_dem = input("Nhập họ đệm (tối đa 50 ký tự): ").strip()
+                so_luong_hoc_sinh = int(input("Nhập số lượng học sinh: "))
+                if so_luong_hoc_sinh <= 0:
+                    print("Số lượng phải lớn hơn 0. Vui lòng nhập lại.")
+                    continue
+                break
+            except ValueError:
+                print("Vui lòng nhập một số nguyên hợp lệ.")
+
+        for i in range(so_luong_hoc_sinh):
+            print(f"\nNhập thông tin cho học sinh thứ {i + 1}:")
+            while True:
+                ma_hoc_sinh = input("Nhập mã học sinh (tối đa 10 ký tự): ").strip()
+                if len(ma_hoc_sinh) > 10:
+                    print("Mã học sinh không được vượt quá 10 ký tự.")
+                    continue
+                if any(hs['ma_hoc_sinh'] == ma_hoc_sinh for hs in danh_sach_hoc_sinh):
+                    print("Mã học sinh bị trùng. Vui lòng nhập lại.")
+                    continue
+                break
+            while True:
+                ho_dem = input("Nhập họ đệm (tối đa 50 ký tự, không chứa số): ").strip()
+                ho_dem = ' '.join(ho_dem.split()) 
                 if len(ho_dem) > 50:
                     print("Họ đệm không được vượt quá 50 ký tự.")
-                    return
-            
-                ten = input("Nhập tên (tối đa 50 ký tự): ").strip()
+                    continue
+                if not ho_dem.replace(' ', '').isalpha(): 
+                    print("Họ đệm không được chứa số hoặc ký tự đặc biệt.")
+                    continue
+                break
+
+            while True:
+                ten = input("Nhập tên (tối đa 50 ký tự, không chứa số): ").strip()
                 if len(ten) > 50:
                     print("Tên không được vượt quá 50 ký tự.")
-                    return
-            
-                tuoi = int(input("Nhập tuổi: "))
-                if not isinstance(tuoi, int) or tuoi <= 0:
-                    print("Tuổi phải là một số nguyên dương.")
-                    return
-            
+                    continue
+                if not ten.isalpha():
+                    print("Tên không được chứa số hoặc ký tự đặc biệt.")
+                    continue
+                break
+
+            while True:
                 try:
-                    ngay_sinh_str=input("Nhập ngày sinh của bạn (dd/mm/yyyy): ")
+                    tuoi = int(input("Nhập tuổi: "))
+                    if tuoi <= 0:
+                        print("Tuổi phải lớn hơn 0. Vui lòng nhập lại.")
+                        continue
+                    break
+                except ValueError:
+                    print("Vui lòng nhập một số nguyên hợp lệ.")
+
+            while True:
+                try:
+                    ngay_sinh_str = input("Nhập ngày sinh (dd/mm/yyyy): ").strip()
                     ngay_sinh = datetime.strptime(ngay_sinh_str, "%d/%m/%Y")
-                    if ngay_sinh.year <= 0:
-                        print("Năm sinh phải lớn hơn 0")
-                    elif ngay_sinh > datetime.now():
+                    if ngay_sinh > datetime.now():
                         print("Ngày sinh không thể là ngày trong tương lai.")
+                        continue
+                    break
                 except ValueError:
                     print("Ngày sinh không hợp lệ. Vui lòng nhập theo định dạng dd/mm/yyyy.")
-                    return
-            
+
+            while True:
                 so_dien_thoai = input("Nhập số điện thoại (10 ký tự): ").strip()
                 if len(so_dien_thoai) != 10 or not so_dien_thoai.isdigit():
                     print("Số điện thoại phải là 10 ký tự và chỉ chứa chữ số.")
-                    return
-            
-                ma_lop = input("Nhập mã lớp (tối đa 10 ký tự): ").strip()
-                assert len(ma_lop)<=10,"Chỉ được nhập 10 kí tự"
-                for hoc_sinh in danh_sach_hoc_sinh:
-                    if hoc_sinh["ma_lop"]==danh_sach_hoc_sinh:
-                        print("Mã lớp bị trùng")
-                    else:
-                        continue
-            
-                hoc_sinh = {
-                    "ma_hoc_sinh": ma_hoc_sinh,
-                    "ho_dem": ho_dem,
-                    "ten": ten,
-                    "tuoi": tuoi,
-                    "ngay_sinh": ngay_sinh.strftime('%d/%m/%Y'),
-                    "so_dien_thoai": so_dien_thoai,
-                    "ma_lop": ma_lop
-                    }
-                danh_sach_hoc_sinh.append(hoc_sinh)
-                
-            except ValueError:
-                print("Dữ liệu không hợp lệ. Vui lòng nhập lại.")
+                    continue
+                break
+
+            ma_lop = input("Nhập mã lớp (tối đa 10 ký tự): ").strip()
+
+            hoc_sinh = {
+                "ma_hoc_sinh": ma_hoc_sinh,
+                "ho_dem": ho_dem,
+                "ten": ten,
+                "tuoi": tuoi,
+                "ngay_sinh": ngay_sinh.strftime('%d/%m/%Y'),
+                "so_dien_thoai": so_dien_thoai,
+                "ma_lop": ma_lop
+            }
+            danh_sach_hoc_sinh.append(hoc_sinh)
         print("Học sinh đã được thêm thành công.")
-        return danh_sach_hoc_sinh
+
     def xoa_hoc_sinh():
         print("\n--- Xóa học sinh ---")
         ma_hoc_sinh = input("Nhập mã học sinh cần xóa: ").strip()
@@ -99,23 +112,14 @@ def quan_ly_thong_tin_hoc_sinh():
         print("Không tìm thấy học sinh với mã đã nhập.")
 
     def chinh_sua_hoc_sinh():
-        ma_hoc_sinh = input("Nhập mã số học sinh cần chỉnh sửa: ").strip()
+        ma_hoc_sinh = input("Nhập mã học sinh cần chỉnh sửa: ").strip()
         for hs in danh_sach_hoc_sinh:
             if hs['ma_hoc_sinh'] == ma_hoc_sinh:
                 hs['ho_dem'] = input("Nhập họ đệm mới: ").strip()
                 hs['ten'] = input("Nhập tên mới: ").strip()
-                try:
-                    hs['tuoi'] = int(input("Nhập tuổi mới: "))
-                except ValueError:
-                    print("Tuổi phải là một số hợp lệ!")
-                    return
+                hs['tuoi'] = int(input("Nhập tuổi mới: "))
                 ngay_sinh_str = input("Nhập ngày sinh mới (dd/mm/yyyy): ").strip()
-                try:
-                    ngay_sinh = datetime.strptime(ngay_sinh_str, '%d/%m/%Y')
-                    hs['ngay_sinh'] = ngay_sinh.strftime('%d/%m/%Y')
-                except ValueError:
-                    print("Ngày sinh không hợp lệ!")
-                    return
+                hs['ngay_sinh'] = datetime.strptime(ngay_sinh_str, '%d/%m/%Y').strftime('%d/%m/%Y')
                 hs['so_dien_thoai'] = input("Nhập số điện thoại mới: ").strip()
                 hs['ma_lop'] = input("Nhập mã lớp mới: ").strip()
                 print("Thông tin học sinh đã được cập nhật.")
@@ -128,7 +132,6 @@ def quan_ly_thong_tin_hoc_sinh():
         if ket_qua:
             print("Kết quả tìm kiếm:")
             for hs in ket_qua:
-                print("mã học sinh,họ đệm,tên,tuổi")
                 print(f"{hs['ma_hoc_sinh']} - {hs['ho_dem']} {hs['ten']} - {hs['tuoi']} tuổi")
         else:
             print("Không tìm thấy học sinh nào!")
@@ -139,16 +142,7 @@ def quan_ly_thong_tin_hoc_sinh():
                 csv_reader = csv.DictReader(open_file)
                 danh_sach_hoc_sinh.clear()
                 for row in csv_reader:
-                    danh_sach_hoc_sinh.append({
-                        "ma_hoc_sinh": row['ma_hoc_sinh'],
-                        "ho_dem": row['ho_dem'],
-                        "ten": row['ten'],
-                        "tuoi": int(row['tuoi']),
-                        "ngay_sinh": row['ngay_sinh'],
-                        "so_dien_thoai": row['so_dien_thoai'],
-                        "ma_lop": row['ma_lop']
-                    })
-                    print(row)
+                    danh_sach_hoc_sinh.append(row)
             print("Đọc danh sách học sinh từ file thành công.")
         except FileNotFoundError:
             print("File không tồn tại.")
@@ -157,12 +151,11 @@ def quan_ly_thong_tin_hoc_sinh():
 
     def luu_danh_sach_vao_file():
         try:
-            with open("file_csv\ds_hoc_sinh.csv", mode="w", newline="") as open_file:
+            with open("file_csv/ds_hoc_sinh.csv", mode="w", newline="") as open_file:
                 fieldnames = ["ma_hoc_sinh", "ho_dem", "ten", "tuoi", "ngay_sinh", "so_dien_thoai", "ma_lop"]
                 csv_writer = csv.DictWriter(open_file, fieldnames=fieldnames)
                 csv_writer.writeheader()
-                for hs in danh_sach_hoc_sinh:
-                    csv_writer.writerow(hs)
+                csv_writer.writerows(danh_sach_hoc_sinh)
             print("Lưu danh sách học sinh vào file thành công.")
         except Exception as e:
             print(f"Đã xảy ra lỗi khi lưu file: {e}")
@@ -181,7 +174,7 @@ def quan_ly_thong_tin_hoc_sinh():
         try:
             lua_chon = int(input("Chọn chức năng (1-8): "))
             if lua_chon == 1:
-                xem_hoc_sinh()
+                xem_danh_sach()
             elif lua_chon == 2:
                 them_hoc_sinh()
             elif lua_chon == 3:
