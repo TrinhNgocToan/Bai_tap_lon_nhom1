@@ -2,11 +2,9 @@ import csv
 from datetime import datetime
 def menu_xu_ly_diem_hoc_sinh():
     danh_sach_hoc_sinh = []
-
     def nhap_danh_sach_hoc_sinh():
         danh_sach = []
         so_luong = int(input("Nhập số lượng học sinh: "))
-
         for i in range(so_luong):
             print(f"Nhập thông tin cho học sinh thứ {i + 1}:")
             while True:
@@ -97,11 +95,11 @@ def menu_xu_ly_diem_hoc_sinh():
                     print("Vui lòng nhập điểm là một số hợp lệ.")
             diem_tb = (diem_toan + diem_ly + diem_hoa + diem_anh + diem_van) / 5
             while True:
-                hoc_ky = input("Học kỳ (tối đa 10 ký tự): ")
-                if len(hoc_ky) <= 10:
+                hoc_ky = input("Học kỳ (chỉ nhập 1 hoặc 2): ")
+                if hoc_ky in ["1", "2"]:
                     break
                 else:
-                    print("Học kỳ không được vượt quá 10 ký tự.")
+                    print("Học kỳ chỉ được nhập là 1 hoặc 2. Vui lòng thử lại.")
             while True:
                 nam_hoc = input("Năm học (4 ký tự): ")
                 if len(nam_hoc) == 4 and nam_hoc.isdigit():
@@ -132,10 +130,8 @@ def menu_xu_ly_diem_hoc_sinh():
                 "ma_hoc_ky": ma_hoc_ky
             }
             danh_sach.append(thong_tin_hoc_sinh)
-
         return danh_sach
     danh_sach_hoc_sinh = nhap_danh_sach_hoc_sinh()
-
     def hien_thi_danh_sach_hoc_sinh(danh_sach):
         if not danh_sach:
             print("Danh sách học sinh trống.")
@@ -161,9 +157,6 @@ def menu_xu_ly_diem_hoc_sinh():
                 print(hs)
                 danh_sach.append(hs)
         print("Lưu danh sách học sinh thành công.")
-
-
-
     def sua_diem_hoc_sinh(danh_sach):
         ma_hoc_sinh = input("Nhập mã học sinh cần sửa điểm: ")
         for hs in danh_sach:
@@ -179,23 +172,32 @@ def menu_xu_ly_diem_hoc_sinh():
                 return
         print("Không tìm thấy học sinh với mã này.")
     def tim_kiem_hoc_sinh_theo_lop_hoc_ky_nam(danh_sach):
-        lop = input("Nhập lớp cần tìm kiếm: ")
+        lop = input("Nhập mã lớp cần tìm kiếm: ")
         ket_qua = [hs for hs in danh_sach if hs['lop'] == lop]
         if not ket_qua:
             print("Không tìm thấy học sinh phù hợp.")
         else:
-            hien_thi_danh_sach_hoc_sinh(ket_qua)
-
-    def tim_kiem_theo_lop_hoac_ten_lop(danh_sach):
-        tu_khoa = input("Nhập mã lớp hoặc tên lớp: ")
-        ket_qua = [hs for hs in danh_sach if hs['lop'] == tu_khoa]
+            print("Danh sách học sinh:")
+            print("Mã HS       | Điểm TB | Học kỳ      | Năm học")
+            print("-" * 40)
+            for hs in ket_qua:
+                print(f"{hs['ma_hoc_sinh']:<12} | {hs['diem_tb']:.2f} | {hs['hoc_ky']:<10} | {hs['nam_hoc']}")
+    def thuc_hien_yeu_cau_so10(danh_sach):
+        lop = input("Nhập mã lớp hoặc tên lớp: ")
+        ket_qua = [hs for hs in danh_sach if hs['lop'] == lop]
         if not ket_qua:
-            print("Không tìm thấy học sinh phù hợp.")
+            print("Không tìm thấy học sinh phù hợp với lớp này.")
         else:
-            ket_qua.sort(key=lambda x: (x['ma_hoc_sinh'], x['diem_tb']))
-            hien_thi_danh_sach_hoc_sinh(ket_qua)
-            danh_sach.append(hien_thi_danh_sach_hoc_sinh)
-
+            ma_hoc_sinh = input("Nhập mã học sinh để tìm kiếm: ")
+            ket_qua_hoc_sinh = [hs for hs in ket_qua if hs['ma_hoc_sinh'] == ma_hoc_sinh]
+            if not ket_qua_hoc_sinh:
+                print("Không tìm thấy học sinh với mã này trong lớp.")
+            else:
+                print("Danh sách học sinh tìm thấy:")
+                print("Mã HS | Họ và tên       | Tuổi | Ngày sinh | SĐT       | Lớp | Toán | Lý | Hóa | Anh | Văn | Điểm TB | Học kỳ | Năm học | Mã học kỳ")
+                print("-" * 100)
+                for hs in ket_qua_hoc_sinh:
+                    print(f"{hs['ma_hoc_sinh']} | {hs['ho_va_ten']:<15} | {hs['tuoi']}   | {hs['ngay_sinh']} | {hs['so_dien_thoai']:<10} | {hs['lop']} | {hs['diem_toan']:.1f} | {hs['diem_ly']:.1f} | {hs['diem_hoa']:.1f} | {hs['diem_anh']:.1f} | {hs['diem_van']:.1f} | {hs['diem_tb']:.2f} | {hs['hoc_ky']} | {hs['nam_hoc']} | {hs['ma_hoc_ky']}")
     def xep_hoc_sinh_theo_toan_truong(danh_sach):
         tieu_chi = input("Sắp xếp theo (1. Điểm TB, 2. Mã HS): ")
         if tieu_chi == "1":
@@ -205,16 +207,13 @@ def menu_xu_ly_diem_hoc_sinh():
         else:
             print("Lựa chọn không hợp lệ.")
             return
-
         hien_thi_danh_sach_hoc_sinh(danh_sach)
-
     def xep_loai_hoc_sinh(danh_sach):
         lop = input("Nhập lớp cần xếp loại: ")
         ket_qua = [hs for hs in danh_sach if hs['lop'] == lop]
         if not ket_qua:
             print("Không tìm thấy học sinh phù hợp.")
             return
-
         ket_qua.sort(key=lambda x: x['ma_hoc_sinh'])
         print("Xếp loại học sinh:")
         for hs in ket_qua:
@@ -225,24 +224,19 @@ def menu_xu_ly_diem_hoc_sinh():
         if so_hoc_sinh < 10:
             print("Danh sách không đủ 10 học sinh để tìm top.")
             return
-
         danh_sach.sort(key=lambda x: x['diem_tb'], reverse=True)
         print("Top 10 học sinh có điểm trung bình cao nhất:")
         for hs in danh_sach[:10]:
             print(f"{hs['ma_hoc_sinh']} - {hs['ho_va_ten']} - {hs['diem_tb']:.2f}")
-
         print("\nTop 10 học sinh có điểm trung bình thấp nhất:")
         for hs in danh_sach[-10:]:
             print(f"{hs['ma_hoc_sinh']} - {hs['ho_va_ten']} - {hs['diem_tb']:.2f}")
-
     def them_hoc_sinh_vao_lop(danh_sach):
         lop = input("Nhập lớp muốn thêm học sinh: ")
         so_luong_hien_tai = sum(1 for hs in danh_sach if hs['lop'] == lop)
-
         if so_luong_hien_tai >= 40:
             print("Lớp đã đủ 40 học sinh, không thể thêm học sinh mới.")
             return
-
         thong_tin_moi = nhap_danh_sach_hoc_sinh()
         for hs in thong_tin_moi:
             if hs['lop'] == lop:
@@ -250,7 +244,97 @@ def menu_xu_ly_diem_hoc_sinh():
                 print("Thêm học sinh vào lớp thành công.")
             else:
                 print(f"Học sinh {hs['ho_va_ten']} không thuộc lớp {lop}, không được thêm.")
+    def thuc_hien_yeu_cau_so_13(danh_sach):
+        print("Tìm kiếm học sinh theo lớp, học kỳ, và năm học:")
+        lop = input("Nhập mã lớp cần tìm kiếm: ")
+        hoc_ky = input("Nhập học kỳ cần tìm kiếm: ")
+        nam_hoc = input("Nhập năm học cần tìm kiếm: ")
+        ket_qua = [hs for hs in danh_sach if hs['lop'] == lop and hs['hoc_ky'] == hoc_ky and hs['nam_hoc'] == nam_hoc]      
+        if not ket_qua:
+            print("Không tìm thấy học sinh phù hợp.")
+        else:
+            print("Danh sách học sinh tìm được:")
+            hien_thi_danh_sach_hoc_sinh(ket_qua)     
+        lua_chon = input("\nBạn có muốn xóa học sinh? (1: Xóa theo mã học sinh, 2: Xóa theo tên học sinh, 0: Quay lại): ")       
+        if lua_chon == "1":
+            ma_hoc_sinh = input("Nhập mã học sinh cần xóa: ")
+            for hs in danh_sach:
+                if hs['ma_hoc_sinh'] == ma_hoc_sinh:
+                    danh_sach.remove(hs)
+                    print(f"Đã xóa học sinh {hs['ho_va_ten']} với mã {ma_hoc_sinh}.")
+                    return
+            print("Không tìm thấy học sinh với mã này.")      
+        elif lua_chon == "2":
+            ten_hoc_sinh = input("Nhập tên học sinh cần xóa: ")
+            for hs in danh_sach:
+                if hs['ho_va_ten'] == ten_hoc_sinh:
+                    danh_sach.remove(hs)
+                    print(f"Đã xóa học sinh {ten_hoc_sinh}.")
+                    return
+            print("Không tìm thấy học sinh với tên này.")       
+        elif lua_chon == "0":
+            print("Quay lại menu chính.")
+        else:
+            print("Lựa chọn không hợp lệ.")
+    def tim_kiem_va_chinh_sua_diem(danh_sach: list):
+        lop = input("Nhập lớp (hoặc để trống nếu không tìm theo lớp): ").strip()
+        hoc_ky = input("Nhập học kỳ (hoặc để trống nếu không tìm theo học kỳ): ").strip()
+        nam_hoc = input("Nhập năm học (hoặc để trống nếu không tìm theo năm học): ").strip()
 
+        if lop == '':
+            lop = None
+        if hoc_ky == '':
+            hoc_ky = None
+        else:
+            if hoc_ky not in ["1", "2"]:
+                print("Học kỳ phải là 1 hoặc 2. Dừng xử lý.")
+                return
+            hoc_ky = int(hoc_ky) 
+        if nam_hoc == '':
+            nam_hoc = None
+        else:
+            try:
+                nam_hoc = int(nam_hoc)
+            except ValueError:
+                print("Năm học phải là số nguyên. Dừng xử lý.")
+                return
+        ket_qua_tim_kiem = [
+            hs for hs in danh_sach
+            if (lop is None or hs['lop'] == lop)
+            and (hoc_ky is None or hs['hoc_ky'] == hoc_ky)
+            and (nam_hoc is None or hs['nam_hoc'] == nam_hoc)
+        ]
+        if not ket_qua_tim_kiem:
+            print("Không tìm thấy học sinh phù hợp!")
+            return
+        print("Danh sách học sinh tìm được:")
+        for hs in ket_qua_tim_kiem:
+            print(f"Mã: {hs['ma_hoc_sinh']}, Tên: {hs['ten_hoc_sinh']}")
+        ma_hoc_sinh = input("Nhập mã học sinh để chỉnh sửa điểm (hoặc để trống nếu không chỉnh sửa): ").strip()
+        ten_hoc_sinh = input("Nhập tên học sinh để chỉnh sửa điểm (hoặc để trống nếu không chỉnh sửa): ").strip()
+        if not ma_hoc_sinh and not ten_hoc_sinh:
+            print("Không có thông tin học sinh để chỉnh sửa. Dừng xử lý.")
+            return
+        for hs in danh_sach:
+            if (ma_hoc_sinh and hs['ma_hoc_sinh'] == ma_hoc_sinh) or \
+            (ten_hoc_sinh and hs['ten_hoc_sinh'] == ten_hoc_sinh):
+                print(f"Đang chỉnh sửa điểm cho học sinh: {hs['ten_hoc_sinh']}")
+                diem_moi = {}
+                while True:
+                    mon_hoc = input("Nhập môn học để chỉnh sửa điểm (hoặc để trống để kết thúc): ").strip()
+                    if not mon_hoc:
+                        break
+                    try:
+                        diem = float(input(f"Nhập điểm cho môn {mon_hoc}: ").strip())
+                        diem_moi[mon_hoc] = diem
+                    except ValueError:
+                        print("Điểm phải là một số. Vui lòng thử lại.")
+                if diem_moi:
+                    hs['diem'] = diem_moi
+                    hs['diem_trung_binh'] = sum(diem_moi.values()) / len(diem_moi)
+                    print(f"Đã cập nhật điểm cho học sinh {hs['ten_hoc_sinh']}")
+                return
+        print("Không tìm thấy học sinh với thông tin đã nhập.")
     while True:
         print("\nMenu:")
         print("1. Hiển thị danh sách học sinh và kèm theo điểm ")
@@ -258,12 +342,14 @@ def menu_xu_ly_diem_hoc_sinh():
         print("3. Lưu danh sách vào tệp CSV")
         print("4. Sửa điểm của học sinh")
         print("5. Đọc danh sách từ file CSV")
-        print("6. Tìm kiếm học sinh theo lớp, học kỳ, năm học")
-        print("7. Tìm kiếm danh sách học sinh theo lớp hoặc tên lớp")
-        print("8. Xem danh sách học sinh toàn trường được sắp xếp theo điểm trung bình hoặc mã học sinh ")
-        print("9. Xếp loại học sinh theo lớp")
-        print("10. Xem top 10 học sinh cao/ thấp điểm nhất")
-        print("11. Thêm học sinh vào lớp mới")
+        print("6. Tìm kiếm học và xem danh sách học sinh và điểm theo mã lớp hoặc tên lớp học.. ")
+        print("7. Tìm kiếm và xem thông tin cùng điểm học sinh theo mã học sinh hoặc tên học sinh .. ")
+        print("8. Xem danh sách học sinh toàn trường được sắp xếp theo điểm trung bình hoặc mã học sinh.. ")
+        print("9. Tìm kiếm và xem danh sách xếp loại học sinh theo lớp ,năm học và học kì ..")
+        print("10. Xem top 10 học sinh cao/ thấp điểm nhất..")
+        print("11. Thêm học sinh vào lớp mới (lớp đủ 40 học sinh ko đc thêm vào)..")
+        print("12.Tìm kiếm theo lớp, học kì, năm học và chỉnh sửa điểm cho học sinh theo mã học sinh hoặc tên học sinh (điểm trung bình tự động tính không cần nhập)..")
+        print("13.Tìm kiếm theo lớp, học kì, năm học và xóa học sinh theo tên học sinh hoặc mã học sinh")
         print("0. Thoát")
         lua_chon = input("Nhập lựa chọn: ")
         if lua_chon == "1":
@@ -279,7 +365,7 @@ def menu_xu_ly_diem_hoc_sinh():
         elif lua_chon == "6":
             tim_kiem_hoc_sinh_theo_lop_hoc_ky_nam(danh_sach_hoc_sinh)
         elif lua_chon == "7":
-            tim_kiem_theo_lop_hoac_ten_lop(danh_sach_hoc_sinh)
+            thuc_hien_yeu_cau_so10(danh_sach_hoc_sinh)
         elif lua_chon == "8":
             xep_hoc_sinh_theo_toan_truong(danh_sach_hoc_sinh)
         elif lua_chon == "9":
@@ -288,6 +374,10 @@ def menu_xu_ly_diem_hoc_sinh():
             top_hoc_sinh(danh_sach_hoc_sinh)
         elif lua_chon == "11":
             them_hoc_sinh_vao_lop(danh_sach_hoc_sinh)
+        elif lua_chon == "12":
+            tim_kiem_va_chinh_sua_diem(danh_sach_hoc_sinh)
+        elif lua_chon == "13":
+            thuc_hien_yeu_cau_so_13(danh_sach_hoc_sinh)
         elif lua_chon == "0":
             print("Thoát chương trình.")
             break
