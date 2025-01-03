@@ -361,7 +361,7 @@ def menu_xu_ly_diem_hoc_sinh():
         elif lua_chon == "4":
             sua_diem_hoc_sinh(danh_sach_hoc_sinh)
         elif lua_chon == "5":
-            danh_sach_hoc_sinh = doc_file_csv()
+            danh_sach_hoc_sinh = doc_file_csv(danh_sach_hoc_sinh)
         elif lua_chon == "6":
             tim_kiem_hoc_sinh_theo_lop_hoc_ky_nam(danh_sach_hoc_sinh)
         elif lua_chon == "7":
