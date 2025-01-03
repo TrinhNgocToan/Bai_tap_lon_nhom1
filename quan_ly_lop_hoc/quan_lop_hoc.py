@@ -32,13 +32,16 @@ def xem_lop_hoc():
     except Exception as e:
         print(f"Lỗi: {e}")
 
+
 def them_lop_hoc():
     file_path = 'file_csv/ds_lop_hoc.csv'  
+
     try:
         so_luong = int(input("Nhập số lượng lớp học: "))
 
         for i in range(so_luong):
             print(f"Nhập thông tin cho lớp học thứ {i + 1}:")
+            
             while True:
                 ma_lop = input("Nhập mã lớp (tối đa 10 ký tự): ")
                 if len(ma_lop) > 10:
@@ -60,6 +63,22 @@ def them_lop_hoc():
                         print("Số bàn phải là một số nguyên dương và không vượt quá 40. Vui lòng nhập lại.")
                 except ValueError:
                     print("Số bàn phải là một số nguyên. Vui lòng thử lại.")
+
+            lop_ton_tai = False
+            try:
+                with open(file_path, mode='r', encoding='utf-8') as file:
+                    reader = csv.DictReader(file)
+                    for row in reader:
+                        if row['Mã lớp'] == ma_lop:
+                            lop_ton_tai = True
+                            break
+            except FileNotFoundError:
+                pass
+
+            if lop_ton_tai:
+                print(f"Lớp học với mã {ma_lop} đã tồn tại. Không thể thêm lớp này.")
+                continue
+
             new_row = {'Mã lớp': ma_lop, 'Tên lớp': ten_lop, 'Số bàn': so_ban}
             file_exists = os.path.exists(file_path)
             with open(file_path, mode='a', encoding='utf-8', newline='') as file:
@@ -67,9 +86,14 @@ def them_lop_hoc():
                 if not file_exists:
                     writer.writeheader()
                 writer.writerow(new_row)
-            print(f"Lớp học {ten_lop} đã được thêm vào file {file_path}!")
+
+            print(f"Lớp học {ten_lop} đã được thêm!")
+    
     except ValueError:
         print("Vui lòng nhập số hợp lệ.")
+
+
+
 def xoa_lop_hoc():
     file_path = 'file_csv/ds_lop_hoc.csv' 
     ma_lop = input("Nhập mã lớp cần xóa: ")
@@ -95,6 +119,8 @@ def xoa_lop_hoc():
         print(f"Lớp học với mã {ma_lop} đã được xóa!")
     else:
         print(f"Lớp học với mã {ma_lop} không tồn tại!")
+
+
 def chinh_sua_lop_hoc():
     file_path = 'file_csv/ds_lop_hoc.csv'  
     try:
@@ -154,22 +180,42 @@ def chinh_sua_lop_hoc():
     except ValueError:
         print("Lỗi nhập liệu! Vui lòng nhập một giá trị hợp lệ.")
 
+
 def tim_kiem_lop_hoc():
-    file_path = 'file_csv/ds_lop_hoc.csv' 
+    file_path = 'file_csv/ds_lop_hoc.csv'
 
     try:
         tu_khoa = input("Nhập mã lớp hoặc tên lớp học để tìm kiếm: ").strip()
-
         with open(file_path, mode="r", encoding="utf-8") as file:
             reader = csv.DictReader(file)
             danh_sach_lop_hoc = list(reader)
-
-        ket_qua = [lop for lop in danh_sach_lop_hoc if tu_khoa.lower() in lop['Mã lớp'].lower() or tu_khoa.lower() in lop['Tên lớp'].lower()]
+        ket_qua = [
+            lop for lop in danh_sach_lop_hoc
+            if tu_khoa.lower() in lop['Mã lớp'].lower() or tu_khoa.lower() in lop['Tên lớp'].lower()
+        ]
 
         if ket_qua:
             print("Lớp học tìm thấy:")
             for lop in ket_qua:
                 print(f"Mã lớp: {lop['Mã lớp']}, Tên lớp: {lop['Tên lớp']}, Số bàn: {lop['Số bàn']}")
+                file_path = 'file_csv\ds_hoc_sinh.csv'
+
+                try:
+                    with open(file_path, mode="r", encoding="utf-8") as hs_file:
+                        hs_reader = csv.DictReader(hs_file)
+                        danh_sach_hoc_sinh = list(hs_reader)
+
+                    print(f"Danh sách học sinh của lớp {lop['Mã lớp']}:")
+                    for hs in danh_sach_hoc_sinh:
+                        print(
+                            f"Mã HS: {hs['ma_hoc_sinh']}, Họ đệm: {hs['ho_dem']}, Tên: {hs['ten']}, "
+                            f"Tuổi: {hs['tuoi']}, Ngày sinh: {hs['ngay_sinh']}, "
+                            f"SĐT: {hs['so_dien_thoai']}"
+                        )
+                except FileNotFoundError:
+                    print(f"Không tìm thấy file danh sách học sinh cho lớp {lop['Mã lớp']}.")
+                except KeyError:
+                    print(f"File danh sách học sinh của lớp {lop['Mã lớp']} không đúng định dạng yêu cầu.")
         else:
             print("Không tìm thấy lớp học khớp với yêu cầu.")
 
